@@ -1,4 +1,4 @@
-##Traffic Sign Recognition
+## Traffic Sign Recognition
 
 **Build a Traffic Sign Recognition Project**
 
@@ -42,8 +42,8 @@ The goals / steps of this project are the following:
 |Model Certainty, Softmax Probabilities| Done|
 
 
-##Data Set Summary & Exploration
-####1. Basic Summary of the data set
+## Data Set Summary & Exploration
+#### 1. Basic Summary of the data set
 Using pandas and numpy, a basic summary of the data set is provided below:
 >Exploring Data set:  
 >Number of training examples = 34799  
@@ -68,16 +68,16 @@ Also summarized the Most and Least common road signs (prefixed with #sign-id):
 > 27 Pedestrians  
 
 
-####2. Visualising the data set
+#### 2. Visualising the data set
 - Histogram of the count for each of the traffic sign class
 ![alt text][image1]
 - Displaying 3 images per traffic signs for all traffic signs
 ![alt text][image2]
 
 
-##Design and Test the Model
+## Design and Test the Model
 
-###1. Pre-processing the image data
+### 1. Pre-processing the image data
 Preprocessing is being done in the IPython code cells 4,5 and 6
 
 Preprocessing techinques explored:
@@ -99,7 +99,7 @@ Observations:
 ![alt text][image3]
 
 
-###2. Data for training, validation and testing
+### 2. Data for training, validation and testing
 No additional data split was done since the input data was already split into 3 files one each for training, valid (for cross-validation) and testing.
 
 > STANDOUT - TODO  
@@ -111,7 +111,7 @@ No additional data split was done since the input data was already split into 3 
 >   brightness clipping (simulate high contrast scenario)  
 
 
-###3. Model Architecure 
+### 3. Model Architecure 
 Code block #7 contains the Model Architecture.
 The model is the same as LeNet with dropout added to the fully connected layers.
 
@@ -134,7 +134,7 @@ The model is the same as LeNet with dropout added to the fully connected layers.
 |5|Fully Connected|Input 84, Output 43 (num traffic sign classes)|
 
 
-###4. Model Training
+### 4. Model Training
 Code blocks 8, 9, 10 and 11 contain the model training and validation code.
 For training Adam Optimizer was used with loss operation being a reduced_mean of cross_entropy.
 Hyper-parameters:
@@ -144,7 +144,7 @@ Hyper-parameters:
 - Learning Rate 0.001
 - Dropout 0.75
 
-###5. Approach for finding solution
+### 5. Approach for finding solution
 
 The LeNet model was used as the starting point for building the solution. With the LeNet model as is, the accuracy peaked at 0.94. Augumented the LeNet model by adding dropout to reduce over-fitting to input data.
 
@@ -173,21 +173,21 @@ Over multiple iterations these parameters were tuned to understand the behaviour
 **Validation accuracy across epochs**  
 ![alt text][image11]
 
-##Test a Model on New Images
+## Test a Model on New Images
 
-###1. Web Images
+### 1. Web Images
 
 Here are five German traffic signs that I found on the web:
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6]  ![alt text][image7] ![alt text][image8] ![alt text][image9]
 
 
-###2. Prediction on web images
+### 2. Prediction on web images
 The code for making predictions with the new images is located in code block 17, 18. The model was able to guess 5 out of 6 images correctly once i cropped them to include just the image in the bounding box. 
 
 Pediction accuracy: 83.3%
 
-###3. Sotmax probabilities for web images
+### 3. Sotmax probabilities for web images
 
 ![alt text][image10]
 
