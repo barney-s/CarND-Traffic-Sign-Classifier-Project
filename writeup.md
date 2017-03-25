@@ -14,18 +14,29 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./writeup_images/explore_1.png "Histogram of Traffic Signs"
-[image2]: ./writeup_images/explore_2.png "Example training images for each traffic sign class"
-[image3]: ./writeup_images/preprocess.png "Example pre-processed images"
+[explore1]: ./writeup_images/explore1.png "Histogram of Traffic Signs"
+[explore2]: ./writeup_images/explore2.png "Example training images for each traffic sign class"
+
+[pp1]: ./writeup_images/preprocess1.png "Example pre-processed images"
+[pp2]: ./writeup_images/preprocess2.png "Example pre-processed images"
+[pp3]: ./writeup_images/preprocess3.png "Example pre-processed images"
+
+[valid_epoch]: ./writeup_images/validation_epochs.png "Training rate"
+[tensor_accuracy]: ./writeup_images/tensorboard_accuracy.png  "Tensorboard Accuracy graph"
+[tensor_loss]: ./writeup_images/tensorboard_loss.png  ""Tensorboard Loss graph"
+
+
+[lenet_graph]: ./writeup_images/lenet_graph.png "tfboard view of LeNet graph"
+
+[web_softmax]: ./writeup_images/web_predictions.png "Predictions on web images"
+
 [image4]: ./web-german-traffic-signs/3%20Speed_Limit_60.jpg "Speed limit sign"
 [image5]: ./web-german-traffic-signs/9%20No_Passing.jpg "No Passing sign"
 [image6]: ./web-german-traffic-signs/11%20Right_Of_Way_Next_Intersection.jpg "Right of way"
 [image7]: ./web-german-traffic-signs/18%20General_Caution.jpg "No Passing sign"
 [image8]: ./web-german-traffic-signs/25%20Road_work.jpg "Road Work"
 [image9]: ./web-german-traffic-signs/28%20Children_Crossing.jpg "Children Crossing"
-[image10]: ./writeup_images/web_predictions.png "Predictions on web images"
-[image11]: ./training_rate.png "Training rate"
-[image12]: ./writeup_images/lenet_graph.png "tfboard view of LeNet graph"
+
 
 
 ## Rubric Points
@@ -71,15 +82,15 @@ Also summarized the Most and Least common road signs (prefixed with #sign-id):
 
 #### 2. Visualising the data set
 - Histogram of the count for each of the traffic sign class for train,valid and test data-sets. All the data-sets are proportional. 
-![alt text][image1]
+![alt text][explore1]
 - Displaying 3 images per traffic signs for all traffic signs
-![alt text][image2]
+![alt text][explore2]
 
 
 ## Design and Test the Model
 
 ### 1. Pre-processing the image data
-Preprocessing is being done in the IPython code cells 4,5 and 6
+Preprocessing is being done in the IPython code cells 4 and 5
 
 **Preprocessing techinques explored**
 
@@ -87,7 +98,7 @@ Preprocessing is being done in the IPython code cells 4,5 and 6
 - minmax scaling to the range [0.1, 0.9]
 - minmax scaling to the range [10, 240]
 - cv2 normalize the image
-- Histogram Equialization (CLAHE) *reviewer suggestion*
+- Histogram Equialization (CLAHE) 
 
 **Observations**
 
@@ -96,26 +107,59 @@ Preprocessing is being done in the IPython code cells 4,5 and 6
 3. When i switched to cv2 nomalize to pull up dark images, the validation accuracy improved to 0.95
 4. Tried skimage's rescale_intensity as well
 5. Tried Histogram Equalization on grayscale image
-6. Then tried CLAHE on L-Channel of LAB Colorspace image before converting back to BGR colorspace. With this the validation accuracy improved to ~0.96
+6. Then tried CLAHE on L-Channel of LAB Colorspace image before converting back to BGR colorspace. With this the validation accuracy improved to 0.96
 
 **Example Preprocessed images:**
 
-![alt text][image3]
-
-
-**Augmenting Image Data**
-http://florianmuellerklein.github.io/cnn_streetview/
+![alt text][pp1]
+![alt text][pp2]
 
 ### 2. Data for training, validation and testing
 No additional data split was done since the input data was already split into 3 files one each for training, valid (for cross-validation) and testing.
 
-> STANDOUT - TODO  
+**Augmenting Image Data**  
+Image data was augmented by transforming a subset(50%) of the training images and adding it to the original training set.   
+This is being done in code block 6. The transforms applied were a combination of the following:
+
+- rotate: randomly between -5 to 5 degrees
+- scale: randomly between 0.9 to 1.3
+- translate (shift): randomly between -2 and 2 independently over both axes
+- shear: randomly between -5 to 15 degrees
+
+With augmentation the validation accuracy improved.
+
+- When augmenting 20% of the training images, the validation accuracy climbed to 0.97
+- When augmenting 50% of the training images, the validation accuracy climbed further to 0.985
+
+
+![alt text][pp3]
+
 > augmentation - TODO  
->   rotation  
->   skew  (seeing at an angle)  
 >   noise (simulate rain/fog)  
 >   degauss (simulate fog)  
 >   brightness clipping (simulate high contrast scenario)  
+
+*ref:  
+http://florianmuellerklein.github.io/cnn_streetview/  
+http://benanne.github.io/2014/04/05/galaxy-zoo.html*
+
+
+#### 2.1 Impact of Data pre-processing and augmentation
+
+
+| Pre Processing | Validation Accuracy |
+|:----|:---|
+|grayscale + minmax normalization|0.91|
+|minmax normalization|0.92|
+|cv2 normalization|0.93|
+|CLAHE on L-Channel|0.96|
+
+| Data Augmentation (with CLAHE) | Validation Accuracy |
+|:----|:---|
+|No Augmentation|0.96|
+|Image augmentation 20%|0.97|
+|Image augmentation 50%|0.985|
+ 
 
 
 ### 3. Model Architecure 
@@ -141,7 +185,7 @@ The model is the same as LeNet with dropout added to the fully connected layers.
 |5|Fully Connected|Input 84, Output 43 (num traffic sign classes)|
 
 **Visualizing the Model using tensorboard**
-![alt text][image12]
+![alt text][lenet_graph]
 
 ### 4. Model Training
 Code blocks 8, 9, 10 and 11 contain the model training and validation code.
@@ -165,8 +209,8 @@ The Code for calculating accuracy is in code block 9.
 
 My final model results were:
 
-* validation set accuracy of  0.96
-* test set accuracy of 0.94
+* validation set accuracy of  0.985
+* test set accuracy of 0.959
 
 > TODO  
 > explore - different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function
@@ -180,7 +224,13 @@ Over multiple iterations these parameters were tuned to understand the behaviour
 - Tried different pre-processing and found that it had a significant impact on accuracy of the training
 
 **Validation accuracy across epochs**  
-![alt text][image11]
+![alt text][valid_epoch]
+
+**tensorboard graphs for accuracy and loss for 2 training runs (20% augmentation, 50% augmentation)**
+
+![alt text][tensor_accuracy]
+
+![alt text][tensor_loss]
 
 ## Test a Model on New Images
 
@@ -194,19 +244,18 @@ Here are five German traffic signs that I found on the web. The images were cura
 ### 2. Prediction on web images
 The code for making predictions with the new images is located in code block 17, 18. 
 
-Web Image prediction accuracy:  83.3 %
-Test Image prediction accuracy: 94 %
+Web Image prediction accuracy:  100 %
+Test Image prediction accuracy: 95.9 %
 
-The model is not general enough to work with scaled down images taken with regular camera. The model was able to guess 5 out of 6 images correctly once i cropped them to include just the image in the bounding box. 
-I had also noticed that presence of watermark on the image also results in mis-classification indicating over-fitting.
+The model seems general enough to work with scaled down images taken with regular camera. The model was able to guess all of the images correctly once i cropped them to include just the image in the bounding box. 
+I had also noticed that presence of watermark on an image (removed from set) resulted in mis-classification indicating over-fitting.
 
 ### 3. Sotmax probabilities for web images
 
-- The model has a very high confidence in prediction in 4 out of the 6 images
-- "60 kmph" sign was misclassified confidently as "Keep Right"
-- For the rest 2 signs, the confidence of classification was 80% which is a decently high.
+- The model has a very high confidence in prediction in 3 out of the 6 images
+- For the rest 3 signs, the confidence of classification was 80% which is a decently high.
 
 
-![alt text][image10]
+![alt text][web_softmax]
 
 The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
