@@ -23,7 +23,7 @@ The goals / steps of this project are the following:
 
 [valid_epoch]: ./writeup_images/validation_epochs.png "Training rate"
 [tensor_accuracy]: ./writeup_images/tensorboard_accuracy.png  "Tensorboard Accuracy graph"
-[tensor_loss]: ./writeup_images/tensorboard_loss.png  ""Tensorboard Loss graph"
+[tensor_loss]: ./writeup_images/tensorboard_loss.png  "Tensorboard Loss graph"
 
 
 [lenet_graph]: ./writeup_images/lenet_graph.png "tfboard view of LeNet graph"
