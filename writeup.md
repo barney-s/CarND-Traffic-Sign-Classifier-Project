@@ -25,6 +25,7 @@ The goals / steps of this project are the following:
 [image9]: ./web-german-traffic-signs/28%20Children_Crossing.jpg "Children Crossing"
 [image10]: ./writeup_images/web_predictions.png "Predictions on web images"
 [image11]: ./training_rate.png "Training rate"
+[image12]: ./writeup_images/lenet_graph.png "tfboard view of LeNet graph"
 
 
 ## Rubric Points
@@ -69,7 +70,7 @@ Also summarized the Most and Least common road signs (prefixed with #sign-id):
 
 
 #### 2. Visualising the data set
-- Histogram of the count for each of the traffic sign class
+- Histogram of the count for each of the traffic sign class for train,valid and test data-sets. All the data-sets are proportional. 
 ![alt text][image1]
 - Displaying 3 images per traffic signs for all traffic signs
 ![alt text][image2]
@@ -80,24 +81,30 @@ Also summarized the Most and Least common road signs (prefixed with #sign-id):
 ### 1. Pre-processing the image data
 Preprocessing is being done in the IPython code cells 4,5 and 6
 
-Preprocessing techinques explored:
+**Preprocessing techinques explored**
 
 - conversion to grayscale 
 - minmax scaling to the range [0.1, 0.9]
 - minmax scaling to the range [10, 240]
 - cv2 normalize the image
+- Histogram Equialization (CLAHE) *reviewer suggestion*
 
-Observations:
+**Observations**
 
-- Using grayscale and minmax normalization, the training-accuracy was not increasing beyond 0.91
-- Using just minmax normalization the accuracy of the model was not increasing beyond 0.92
-- When i switched to cv2 nomalize to pull up dark images, the accuracy improved.
-- Tried skimage's rescale_intensity as well
+1. Using grayscale and minmax normalization, the validation accuracy was not increasing beyond 0.91
+2. Using just minmax normalization the validation accuracy of the model was not increasing beyond 0.92
+3. When i switched to cv2 nomalize to pull up dark images, the validation accuracy improved to 0.95
+4. Tried skimage's rescale_intensity as well
+5. Tried Histogram Equalization on grayscale image
+6. Then tried CLAHE on L-Channel of LAB Colorspace image before converting back to BGR colorspace. With this the validation accuracy improved to ~0.96
 
 **Example Preprocessed images:**
 
 ![alt text][image3]
 
+
+**Augmenting Image Data**
+http://florianmuellerklein.github.io/cnn_streetview/
 
 ### 2. Data for training, validation and testing
 No additional data split was done since the input data was already split into 3 files one each for training, valid (for cross-validation) and testing.
@@ -133,6 +140,8 @@ The model is the same as LeNet with dropout added to the fully connected layers.
 |4|Dropout||
 |5|Fully Connected|Input 84, Output 43 (num traffic sign classes)|
 
+**Visualizing the Model using tensorboard**
+![alt text][image12]
 
 ### 4. Model Training
 Code blocks 8, 9, 10 and 11 contain the model training and validation code.
@@ -177,17 +186,26 @@ Over multiple iterations these parameters were tuned to understand the behaviour
 
 ### 1. Web Images
 
-Here are five German traffic signs that I found on the web:
+Here are five German traffic signs that I found on the web. The images were curated to get the best prediction results from the model. All the images are well illuminated with a central histogram. Some of the images have watermarks on the corner which could throw off the prediction. In once of the test images it was consistently misclassified and i removed it from the test set.
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6]  ![alt text][image7] ![alt text][image8] ![alt text][image9]
 
 
 ### 2. Prediction on web images
-The code for making predictions with the new images is located in code block 17, 18. The model was able to guess 5 out of 6 images correctly once i cropped them to include just the image in the bounding box. 
+The code for making predictions with the new images is located in code block 17, 18. 
 
-Pediction accuracy: 83.3%
+Web Image prediction accuracy:  83.3 %
+Test Image prediction accuracy: 94 %
+
+The model is not general enough to work with scaled down images taken with regular camera. The model was able to guess 5 out of 6 images correctly once i cropped them to include just the image in the bounding box. 
+I had also noticed that presence of watermark on the image also results in mis-classification indicating over-fitting.
 
 ### 3. Sotmax probabilities for web images
+
+- The model has a very high confidence in prediction in 4 out of the 6 images
+- "60 kmph" sign was misclassified confidently as "Keep Right"
+- For the rest 2 signs, the confidence of classification was 80% which is a decently high.
+
 
 ![alt text][image10]
 
